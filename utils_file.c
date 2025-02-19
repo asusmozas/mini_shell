@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils_file.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alexander <alexander@student.42.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/19 10:40:40 by alexander         #+#    #+#             */
+/*   Updated: 2025/02/19 10:40:51 by alexander        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "mini_shell.h"
 // parte curiosa de ver luego si tengo fuerzas te explico
 char	*join_path(char *s1, char *s2)

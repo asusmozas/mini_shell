@@ -3,13 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   mini_shell.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: owmarqui <owmarqui@student.42madrid.c      +#+  +:+       +#+        */
+/*   By: alexander <alexander@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 15:11:06 by owmarqui          #+#    #+#             */
-/*   Updated: 2025/01/29 15:17:09 by owmarqui         ###   ########.fr       */
+/*   Updated: 2025/02/19 10:30:54 by alexander        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#ifndef MINI_SHELL_H
+
 # define MINI_SHELL_H
 
 # include "Libft/libft.h"
@@ -200,8 +200,8 @@ int		builtin_exit(t_cmd *cmd, t_env **envs);
 bool	is_special_env(char *key);
 int		builtin_env(t_cmd *cmd, t_env **envs);
 //echo
-int	handle_options(char **args, bool *n_option);
-int	builtin_echo(t_cmd *cmd, t_env **envs);
+int		handle_options(char **args, bool *n_option);
+int		builtin_echo(t_cmd *cmd, t_env **envs);
 //cd
 void	error_invalid(char *path);
 char	*home_path(t_env **envs);

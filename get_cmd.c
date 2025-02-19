@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_cmd.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alexander <alexander@student.42.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/19 10:27:17 by alexander         #+#    #+#             */
+/*   Updated: 2025/02/19 10:27:19 by alexander        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "mini_shell.h"
 
 static char	**init_args(t_cmd *cmd, char **tokens, size_t start, size_t end)
 {
 	char	**args;
 	size_t	i;
-	(void)cmd;
 
+	(void)cmd;
 	args = (char **)ft_calloc(sizeof(char *), end - start + 1);
 	if (!args)
 		return (NULL);

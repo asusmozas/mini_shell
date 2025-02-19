@@ -3,13 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   executing.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: owmarqui <owmarqui@student.42madrid.c      +#+  +:+       +#+        */
+/*   By: alexander <alexander@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 14:41:20 by owmarqui          #+#    #+#             */
-/*   Updated: 2025/02/04 14:41:29 by owmarqui         ###   ########.fr       */
+/*   Updated: 2025/02/19 10:24:33 by alexander        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "mini_shell.h"
+
 
 int	count_cmd_nodes(t_cmd *cmds)
 {
@@ -99,7 +99,7 @@ void	ft_execute(t_cmd *current, char **envp, int infile, int outfile)
 		ft_infile(current, infile);
 		ft_outfile(current, outfile);
 		if (execve(current->pth_cmd, current->cmd, envp) == -1)
-                exit(0);
+			exit(0);
 	}
 }
 
@@ -126,14 +126,14 @@ void	ft_wait_for_childs(void)
 
 void	ft_init_exec(t_cmd **cmds, t_env **env)
 {
-	t_cmd   *current;
+	t_cmd	*current;
 	int		file;
-    int     len;
-    char    **envp;
-	
+	int		len;
+	char	**envp;
+
 	current = *cmds;
-    len = count_cmd_nodes(*cmds);
-    envp = format_env(*env);
+	len = count_cmd_nodes(*cmds);
+	envp = format_env(*env);
 	ft_check_exec(current, envp);
 	//ft_init_heredoc(current, env); // apañetelas 
 	file = STDIN_FILENO;
@@ -144,12 +144,11 @@ void	ft_init_exec(t_cmd **cmds, t_env **env)
 		if (!current->next)
 			ft_execute(current, envp, file, STDOUT_FILENO);
 		else
-			file = ft_pipex(current, envp,  file);
+			file = ft_pipex(current, envp, file);
 		current = current->next;
 	}
 	if (file != STDIN_FILENO)
 		close(file);
 	ft_wait_for_childs();
 	ft_free_cmd(cmds, envp);
-
 }

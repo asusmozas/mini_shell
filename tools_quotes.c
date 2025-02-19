@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tools_quotes.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: owmarqui <owmarqui@student.42madrid.c      +#+  +:+       +#+        */
+/*   By: alexander <alexander@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 18:42:38 by owmarqui          #+#    #+#             */
-/*   Updated: 2025/02/15 18:42:40 by owmarqui         ###   ########.fr       */
+/*   Updated: 2025/02/19 10:40:07 by alexander        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,43 +44,44 @@ int	isinquote(char *token, size_t *i)
 	return (0);
 }
 
-int check_end_by_quote(char *line, int i)
+int	check_end_by_quote(char *line, int i)
 {
-    i--;
-    while (i > 0 && is_space(line[i]))
-        i--;
-    if (line[i] == '"' || line[i] == '\'')
-        return (1);
-    return (0);
+	i--;
+	while (i > 0 && is_space(line[i]))
+		i--;
+	if (line[i] == '"' || line[i] == '\'')
+		return (1);
+	return (0);
 }
 
-char *trimm_token_quote(char **token)
-{
-    char    quote;
-    char    *str;
-    size_t  i;
-    size_t  str_index;
 
-    str = (char *)malloc(sizeof(char)* ft_strlen(*token) + 1);
-    if (!str)
-        return (NULL);
-    i = 0;
-    str_index = 0;
-    quote = '\0';
-    while (i < ft_strlen(*token))
-    {
-        if (!quote && (((*token)[i]) == '\'' || (*token)[i] == '\"'))
-            quote = (*token)[i++];
-        else if (quote && (*token)[i] == quote)
-        {
-            quote = '\0';
-            i++;
-        }
-        else
-            str[str_index++] = (*token)[i++];
-    }
-    str[str_index] = '\0';
-    return (free(*token),  str);
+char	*trimm_token_quote(char **token)
+{
+	char	quote;
+	char	*str;
+	size_t	i;
+	size_t	str_index;
+
+	str = (char *)malloc(sizeof(char) * ft_strlen(*token) + 1);
+	if (!str)
+		return (NULL);
+	i = 0;
+	str_index = 0;
+	quote = '\0';
+	while (i < ft_strlen(*token))
+	{
+		if (!quote && (((*token)[i]) == '\'' || (*token)[i] == '\"'))
+			quote = (*token)[i++];
+		else if (quote && (*token)[i] == quote)
+		{
+			quote = '\0';
+			i++;
+		}
+		else
+			str[str_index++] = (*token)[i++];
+	}
+	str[str_index] = '\0';
+	return (free(*token), tr);
 }
 
 bool	handle_quotes(char *line, size_t *i)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: owmarqui <owmarqui@student.42madrid.c      +#+  +:+       +#+        */
+/*   By: alexander <alexander@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 18:41:04 by owmarqui          #+#    #+#             */
-/*   Updated: 2025/02/15 18:41:08 by owmarqui         ###   ########.fr       */
+/*   Updated: 2025/02/19 10:29:06 by alexander        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,25 +35,25 @@ static void printtokens(t_cmd **cmds)
 
 t_cmd	*init_cmds(char **tokens)
 {
-    t_cmd   *cmds;
-    size_t  start;
-    size_t  i;
+	t_cmd	*cmds;
+	size_t	start;
+	size_t	i;
 
-    cmds = NULL;
-    start = 0;
-    i = 0;
-    while (tokens[i])
-    {
-        if (tokens[i][0] == '|')
-        {
-            add_cmd(&cmds, new_cmd(tokens, start, i));
-            start = i + 1;
-        }
-        i++;
-    }
-    if (tokens[start])
-        add_cmd(&cmds, new_cmd(tokens, start, i));
-    if (cmds && cmds->next)
+	cmds = NULL;
+	start = 0;
+	i = 0;
+	while (tokens[i])
+	{
+		if (tokens[i][0] == '|')
+		{
+			add_cmd(&cmds, new_cmd(tokens, start, i));
+			start = i + 1;
+		}
+		i++;
+	}
+	if (tokens[start])
+		add_cmd(&cmds, new_cmd(tokens, start, i));
+	if (cmds && cmds->next)
 		cmds_has_pipes(cmds);
 	return (cmds);
 }
@@ -71,7 +71,7 @@ t_env	*init_envs(char **envp)
 		i = 0;
 		while ((*envp)[i] != '=')
 			i++;
-		name = ft_substr(*envp , 0, i);
+		name = ft_substr(*envp, 0, i);
 		set_env(&env, name, ft_strdup(getenv(name)));
 		free(name);
 		envp++;
@@ -117,7 +117,8 @@ static int	program(t_cmd **cmds, t_env **envs)
 		{
 			set_env(envs, "_", ft_strdup(last_cmd_arg(*cmds)));
 			//printtokens(cmds);
-			ft_init_exec(cmds, envs); // retorne el exit status capaz que tenga que hacer parte o implementalos atraves de una estrcutura
+			// retorne el exit status capaz que tenga que hacer parte o implementalos atraves de una estrcutura
+			ft_init_exec(cmds, envs);
 		}
 		if (g_minishell.signal > 0)
 			g_minishell.exit_status = 128 + g_minishell.signal;

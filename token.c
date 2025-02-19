@@ -45,7 +45,7 @@ char *get_next_token(char **line, t_env *envs, bool *split_token, char *tokenpre
 		return (NULL);
 	token = ft_substr(*line, 0, i);
 	if (!token)
-		return(NULL);
+		return (NULL);
 	if (ft_strchr(token, '$'))
 		token = ft_replace_env_var(envs, token, split_token, tokenpre);
 	if (quote)
@@ -84,9 +84,9 @@ int	loop_count_tokens(char *line, size_t *i, size_t *count)
 	return (1);
 }
 
-size_t   count_tokens(char *line)
+size_t	count_tokens(char *line)
 {
-    size_t	i;
+	size_t	i;
 	size_t	count;
 
 	i = 0;
@@ -97,30 +97,31 @@ size_t   count_tokens(char *line)
 		if (!loop_count_tokens(line, &i, &count))
 			return (0);
 	}
-	if ((line[i] == '\0' && !is_space(line[i - 1]) && line[i - 1] != '<' && line[i - 1] != '>')
+	if ((line[i] == '\0' && !is_space(line[i - 1])
+			&& line[i - 1] != '<' && line[i - 1] != '>')
 		|| (check_end_by_quote(line, i) && count == 0))
 		count++;
 	return (count);
 }
 
-char    **tokenize(char *line, t_env *envs, char *pretoken)
+char	**tokenize(char *line, t_env *envs, char *pretoken)
 {
-    size_t  i;
-    size_t  j;
-    size_t  numers_tokens;
-    char    **tokens;
-    bool    split_token;
+	size_t 	i;
+	size_t 	j;
+	size_t 	numers_tokens;
+	char	**tokens;
+	bool	split_token;
 
-    split_token = false;
-    i = 0;
-    j = 0;
-    numers_tokens = count_tokens(line);
+	split_token = false;
+	i = 0;
+	j = 0;
+	numers_tokens = count_tokens(line);
 	if (numers_tokens <= 0)
 		return (NULL);
 	tokens = (char **)malloc(sizeof(char *) * (numers_tokens + 1));
 	if (!tokens)
 		return (NULL);
-	while(i++ < numers_tokens)
+	while (i++ < numers_tokens)
 	{
 		tokens[j++] = get_next_token(&line, envs, &split_token, pretoken);
 		if (split_token)

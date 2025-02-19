@@ -3,36 +3,38 @@
 /*                                                        :::      ::::::::   */
 /*   utils_parsing.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: owmarqui <owmarqui@student.42madrid.c      +#+  +:+       +#+        */
+/*   By: alexander <alexander@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 18:42:14 by owmarqui          #+#    #+#             */
-/*   Updated: 2025/02/15 18:42:18 by owmarqui         ###   ########.fr       */
+/*   Updated: 2025/02/19 10:48:19 by alexander        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini_shell.h"
 
 // bienvenido a mi locura
-bool check_tokens(char **tokens, int i)
+bool	check_tokens(char **tokens, int i)
 {
-    while (tokens[i])
-    {
-        if (tokens[i][0] == '|' || tokens[i][0] == '<' || tokens[i][0] == '>')
-        {
-            if (tokens[i + 1] && tokens[i][0] == tokens[i + 1][0])
-                return (error_unexpected(tokens[i + 1], 1 + (tokens[i][0] == '<' || tokens[i][0] == '>')), false);
-            if (tokens[i][0] == '|' && (i == 0 || !tokens[i][0]
-                || tokens[i - 1][0] == '|' || tokens[i - 1][0] == '>'
-                || tokens[i - 1][0] == '<'))
-                return (error_unexpected("|", 1), false);
-            if ((tokens[i][0] == '<' || tokens[i][0] == '>') && !tokens[i - 1][0])
-                return (true);
-            if ((tokens[i][0] == '<' || tokens[i][0] == '>') && tokens[i + 1]
+	while (tokens[i])
+	{
+		if (tokens[i][0] == '|' || tokens[i][0] == '<' || tokens[i][0] == '>')
+		{
+			if (tokens[i + 1] && tokens[i][0] == tokens[i + 1][0])
+				return (error_unexpected(tokens[i + 1], 1 + (tokens[i][0] == '<'
+						|| tokens[i][0] == '>')), false);
+			if (tokens[i][0] == '|' && (i == 0 || !tokens[i][0]
+				|| tokens[i - 1][0] == '|' || tokens[i - 1][0] == '>'
+				|| tokens[i - 1][0] == '<'))
+				return (error_unexpected("|", 1), false);
+			if ((tokens[i][0] == '<' || tokens[i][0] == '>')
+				&& !tokens[i - 1][0])
+				return (true);
+			if ((tokens[i][0] == '<' || tokens[i][0] == '>') && tokens[i + 1]
 				&& (tokens[i + 1][0] == '<' || tokens[i + 1][0] == '>'))
 				return (error_unexpected(tokens[i + 1], 1), false);
-        }
+		}
 		i++;
-    }
+	}
 	return (true);
 }
 
@@ -45,8 +47,9 @@ bool	check_newline(char **tokens)
 	{
 		if (tokens[i][0] == '|' || tokens[i][0] == '<' || tokens[i][0] == '>')
 		{
-			if (!tokens[i + 1] || (tokens[i][0] == '<' && tokens[i + 1][0] == '>'))
-                return (true);
+			if (!tokens[i + 1] || (tokens[i][0] == '<'
+				&& tokens[i + 1][0] == '>'))
+				return (true);
 		}
 		i++;
 	}
