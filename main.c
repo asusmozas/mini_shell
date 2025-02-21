@@ -6,7 +6,7 @@
 /*   By: alexander <alexander@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 18:41:04 by owmarqui          #+#    #+#             */
-/*   Updated: 2025/02/19 10:29:06 by alexander        ###   ########.fr       */
+/*   Updated: 2025/02/21 09:00:28 by alexander        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,13 +82,136 @@ t_env	*init_envs(char **envp)
 	return (env);
 }
 
+char *concat_strings(const char *str1, const char *str2) {
+    if (!str1 || !str2) return NULL;
+    
+    size_t len1 = strlen(str1);
+    size_t len2 = strlen(str2);
+    char *result = (char *)malloc(len1 + len2 + 1);
+    
+    if (!result) return NULL;
+    
+    size_t i = 0;
+    while (i < len1) {
+        result[i] = str1[i];
+        i++;
+    }
+    
+    size_t j = 0;
+    while (j < len2) {
+        result[len1 + j] = str2[j];
+        j++;
+    }
+    result[len1 + len2] = '\0';
+    
+    return result;
+}
+
+char *expand_variable_2(const char *input) {
+    if (!input || strlen(input) < 4 || input[0] != '$' || input[1] != '(' || input[strlen(input) - 1] != ')') 
+    {
+        return NULL;
+    }
+    
+    // Extraer el nombre de la variable
+    size_t len = strlen(input) - 3; // Quitar "$(" y ")"
+    char *var_name = (char *)malloc(len + 1);
+    if (!var_name) return NULL;
+    
+    strncpy(var_name, input + 2, len);
+    var_name[len] = '\0';
+    
+    // Obtener el valor de la variable de entorno
+    char *value = getenv(var_name);
+    free(var_name);
+    
+    if (value) {
+        char *result = (char *)malloc(strlen(value) + 1);
+        if (result) {
+            strcpy(result, value);
+        }
+        return result;
+    }
+    return NULL;
+}
+
+char *get_hostname()
+{
+    int fd = open("/etc/hostname", O_RDONLY);
+    if (fd < 0)
+    {
+        perror("Error al abrir /etc/hostname");
+        return NULL;
+    }
+
+    size_t buffer_size = 64; // Empezamos con un buffer dinámico
+    char *buffer = (char *)malloc(buffer_size);
+    if (!buffer)
+    {
+        perror("Error al asignar memoria");
+        close(fd);
+        return NULL;
+    }
+
+    ssize_t total_read = 0, bytes_read;
+    while ((bytes_read = read(fd, buffer + total_read, buffer_size - total_read - 1)) > 0)
+    {
+        total_read += bytes_read;
+
+        // Expandimos el buffer si es necesario
+        if (total_read >= buffer_size - 1)
+        {
+            buffer_size *= 2;
+            char *new_buffer = (char *)realloc(buffer, buffer_size);
+            if (!new_buffer)
+            {
+                perror("Error al reasignar memoria");
+                free(buffer);
+                close(fd);
+                return NULL;
+            }
+            buffer = new_buffer;
+        }
+    }
+
+    if (bytes_read < 0)
+    {
+        perror("Error al leer /etc/hostname");
+        free(buffer);
+        close(fd);
+        return NULL;
+    }
+
+    buffer[total_read] = '\0'; // Asegurar string válido
+
+    int i = 0;
+    while(i < total_read)
+    {
+        if (buffer[i] == '\n')
+        {
+            buffer[i] = '\0';
+            break;
+        }
+        i++;
+    }
+    // Eliminar el salto de línea al final (si existe)
+
+    close(fd);
+    return buffer; // 🔥 Retornamos el puntero al hostname
+}
+
 static bool	readentry(t_env **envs, t_cmd **cmds)
 {
 	char	*line;
 	char	**tokens;
+	char	*userr;
+	char	*hostname;
 
 	*cmds = NULL;
-	line = readline("minishell$ ");
+	*userr = expand_variable_2("$(USER)");
+	*hostnamee = get_hostname();
+	prompt =  concat_strings("\033[1;32m", concat_strings(userr, concat_strings("@", concat_strings(hostnamee, "\033[1;35m:~$ \033[0m"))));
+	line = readline(prompt);
 	if (!line)
 		return (false);
 	add_history(line);
@@ -105,6 +228,25 @@ static bool	readentry(t_env **envs, t_cmd **cmds)
 	free_tokens(tokens);
 	return (true);
 }
+
+/*int	main(void)
+{
+	char	*line;
+	char    *prompt;
+	char    *expanded;
+
+	signal(SIGINT, handle_sigint); //ctrl-c
+	signal(SIGQUIT, SIG_IGN);
+	line = NULL;
+	while (1)
+	{
+        //expand_variable_2("$(USER)");
+		int parse_error;
+		char *userr = expand_variable_2("$(USER)");
+		char *hostnamee = get_hostname();
+        //printf("%s", hostnamee);
+		prompt =  concat_strings("\033[1;32m", concat_strings(userr, concat_strings("@", concat_strings(hostnamee, "\033[1;35m:~$ \033[0m"))));
+		line = readline(prompt);*/
 
 static int	program(t_cmd **cmds, t_env **envs)
 {
@@ -154,6 +296,3 @@ int	main(int argc, char **argv, char **envp)
 	}
 	return (g_minishell.exit_status);
 }
-
-
-
