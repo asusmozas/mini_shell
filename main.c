@@ -6,7 +6,7 @@
 /*   By: alexander <alexander@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 18:41:04 by owmarqui          #+#    #+#             */
-/*   Updated: 2025/02/21 09:00:28 by alexander        ###   ########.fr       */
+/*   Updated: 2025/02/24 08:37:19 by alexander        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,62 +82,75 @@ t_env	*init_envs(char **envp)
 	return (env);
 }
 
-char *concat_strings(const char *str1, const char *str2) {
-    if (!str1 || !str2) return NULL;
-    
-    size_t len1 = strlen(str1);
-    size_t len2 = strlen(str2);
-    char *result = (char *)malloc(len1 + len2 + 1);
-    
-    if (!result) return NULL;
-    
-    size_t i = 0;
-    while (i < len1) {
-        result[i] = str1[i];
-        i++;
-    }
-    
-    size_t j = 0;
-    while (j < len2) {
-        result[len1 + j] = str2[j];
-        j++;
-    }
-    result[len1 + len2] = '\0';
-    
-    return result;
-}
-
-char *expand_variable_2(const char *input) {
-    if (!input || strlen(input) < 4 || input[0] != '$' || input[1] != '(' || input[strlen(input) - 1] != ')') 
-    {
-        return NULL;
-    }
-    
-    // Extraer el nombre de la variable
-    size_t len = strlen(input) - 3; // Quitar "$(" y ")"
-    char *var_name = (char *)malloc(len + 1);
-    if (!var_name) return NULL;
-    
-    strncpy(var_name, input + 2, len);
-    var_name[len] = '\0';
-    
-    // Obtener el valor de la variable de entorno
-    char *value = getenv(var_name);
-    free(var_name);
-    
-    if (value) {
-        char *result = (char *)malloc(strlen(value) + 1);
-        if (result) {
-            strcpy(result, value);
-        }
-        return result;
-    }
-    return NULL;
-}
-
-char *get_hostname()
+char	*concat_strings(const char *str1, const char *str2)
 {
-    int fd = open("/etc/hostname", O_RDONLY);
+	size_t	len1;
+	size_t	len2;
+	char	*result;
+	size_t	i;
+	size_t j;
+
+	if (!str1 || !str2)
+		return (NULL);
+	len2 = strlen(str2);
+	len1 = strlen(str1);
+	result = (char *)malloc(len1 + len2 + 1);
+	if (!result)
+		return (NULL);
+
+	i = 0;
+	while (i < len1) 
+	{
+		result[i] = str1[i];
+		i++;
+	}
+	j = 0;
+	while (j < len2)
+	{
+		result[len1 + j] = str2[j];
+		j++;
+	}
+	result[len1 + len2] = '\0';
+	return (result);
+}
+
+char	*expand_variable_2(const char *input)
+{
+	size_t	len;
+	char	*var_name;
+	char	*value;
+	char	*result;
+
+	if (!input || strlen(input) < 4 || input[0] != '$'
+		|| input[1] != '(' || input[strlen(input) - 1] != ')')
+	{
+		return (NULL);
+	}
+
+	len = strlen(input) - 3;
+	var_name = (char *)malloc(len + 1);
+	if (!var_name)
+		return (NULL);
+	strncpy(var_name, input + 2, len);
+	var_name[len] = '\0';
+	value = getenv(var_name);
+	free(var_name);
+	if (value)
+	{
+		result = (char *)malloc(strlen(value) + 1);
+		if (result)
+		{
+			strcpy(result, value);
+		}
+		return (result);
+	}
+	return (NULL);
+}
+
+char	*get_hostname()
+{
+	int fd;
+	fd = open("/etc/hostname", O_RDONLY);
     if (fd < 0)
     {
         perror("Error al abrir /etc/hostname");
