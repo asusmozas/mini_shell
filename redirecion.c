@@ -1,27 +1,45 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   redirecion.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alexander <alexander@student.42.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/27 08:20:35 by alexander         #+#    #+#             */
+/*   Updated: 2025/02/27 08:31:18 by alexander        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
 
-char *custom_strtok(char *str, const char *delim) {
-    static char *saved_str = NULL;
-    if (str) saved_str = str;
-    if (!saved_str || *saved_str == '\0') return NULL;
-    
-    char *token_start = saved_str;
-    while (*saved_str && strchr(delim, *saved_str)) saved_str++;
-    if (*saved_str == '\0') return NULL;
-    
-    token_start = saved_str;
-    while (*saved_str && !strchr(delim, *saved_str)) saved_str++;
-    
-    if (*saved_str) {
-        *saved_str = '\0';
-        saved_str++;
-    }
-    
-    return token_start;
+char	*custom_strtok(char *str, const char *delim)
+{
+	static char	*saved_str;
+	char		*token_start;
+
+	saved_str = NULL;
+	if (str)
+		saved_str = str;
+    if (!saved_str || *saved_str == '\0')
+		return (NULL);
+	token_start = saved_str;
+    while (*saved_str && strchr(delim, *saved_str))
+		saved_str++;
+	if (*saved_str == '\0')
+		return (NULL);
+	token_start = saved_str;
+	while (*saved_str && !strchr(delim, *saved_str))
+		saved_str++;
+	if (*saved_str)
+	{
+		*saved_str = '\0';
+		saved_str++;
+	}
+	return (token_start);
 }
 
 void	execute_command(char *command)
@@ -30,8 +48,11 @@ void	execute_command(char *command)
     char	*input_file = NULL;
     char	*output_file = NULL;
     int		append = 0;
-    int i = 0;
+    int		i;
+	pid_t	pid;
+	int fd;
 
+	i = 0;
 	char *token = custom_strtok(command, " ");
 	while (token != NULL)
 	{
@@ -65,13 +86,13 @@ void	execute_command(char *command)
 	}
 	args[i] = NULL;
 
-	pid_t pid = fork();
+	pid = fork();
 	if (pid == 0) 
 	{
 		if (output_file)
 		{
-			int fd = open(output_file, O_WRONLY | O_CREAT | (append ? O_APPEND : O_TRUNC), 0644);
-			if (fd < 0) 
+			fd = open(output_file, O_WRONLY | O_CREAT | (append ? O_APPEND : O_TRUNC), 0644);
+			if (fd < 0)
 			{
 				perror("open output file");
 				exit(EXIT_FAILURE);
@@ -81,7 +102,7 @@ void	execute_command(char *command)
 		}
 		if (input_file)
 		{
-			int fd = open(input_file, O_RDONLY);
+			fd = open(input_file, O_RDONLY);
 			if (fd < 0)
 			{
 				perror("open input file");
@@ -104,7 +125,7 @@ void	execute_command(char *command)
 	}
 }
 
-int	main(int argc, char *argv[]) 
+int	main(int argc, char *argv[])
 {
 	int		i;
 	char	command[256];
